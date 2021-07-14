@@ -3,20 +3,14 @@ import yaml
 import psycopg2
 import json
 import os
-#from database import *
+from database import *
 
 app = Flask(__name__)
 
 import psycopg2
 
-dbuser=os.environ['db_admin_user']
-dbpass=os.environ['db_password']
-dbhost=os.environ['db_server_name']
-dbname=os.environ['db_name']
-dbsslmode = os.environ['db_ssl_mode']
-
-conn_string = "host={0} user={1} dbname={2} password={3} sslmode={4}".format(dbhost, dbuser, dbname, dbpass, dbsslmode)
-conn = psycopg2.connect(conn_string)
+conn_string = "host={0} user={1} dbname={2} password={3} port={4}".format(host, user, dbname, password, port)
+conn = psycopg2.connect(conn_string, connect_timeout=60)
 print("connection established")
 
 cursor = conn.cursor()
@@ -56,4 +50,4 @@ def onedata(id):
         return "updated"
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0',port =5000)
+    app.run(host = '0.0.0.0',port =5001)

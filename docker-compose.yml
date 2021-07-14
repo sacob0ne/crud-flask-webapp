@@ -1,0 +1,31 @@
+version: '3.6'
+services:
+  crud_flask:
+    build:
+      context: .
+    container_name: crud_flask
+    networks:
+      - crud-app-example
+    depends_on:
+      - "postgres"
+    ports:
+      - 5001:5001
+  postgres:
+    image: postgres:13
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    container_name: postgres
+    networks:
+      - crud-app-example
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      # copy the sql script to create tables
+      - ./flask_project_all.sql:/docker-entrypoint-initdb.d/flask_project_all.sql
+networks:
+  crud-app-example: {}
